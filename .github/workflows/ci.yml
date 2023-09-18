@@ -9,6 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-12, macos-13]
+        a: [1, 2, 3]
       fail-fast: false
     steps:
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
@@ -25,6 +26,10 @@ jobs:
         env:
           SIMULATOR_UDID: ${{ steps.simulator.outputs.udid }}
         run: |
-          flutter test \
-            integration_test/ \
+          # Using `flutter drive` instead of `flutter test` because of
+          # https://github.com/flutter/flutter/issues/105913
+            
+          flutter drive \
+            --driver=test_driver/integration_test.dart \
+            --target=integration_test/app_test.dart \
             -d $SIMULATOR_UDID
